@@ -7,10 +7,10 @@ on:
 concurrency: acceptance
 
 env:
-  OWNER: greeta-erp
+  OWNER: greeta-movie-01
   REGISTRY: ghcr.io
-  APP_REPO: erp-api
-  DEPLOY_REPO: erp-infra
+  APP_REPO: movie-api
+  DEPLOY_REPO: movie-infra
   VERSION: ${{ github.sha }}
 
 jobs:

@@ -3,7 +3,7 @@ on: push
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_OWNER: greeta-erp
+  IMAGE_OWNER: greeta-movie-01
   VERSION: ${{ github.sha }}
 
 jobs:
@@ -28,27 +28,17 @@ jobs:
         run: |
           mvn clean install -DskipTests
       - name: Build container images
-        run: |
-          cd admin-service
-          mvn spring-boot:build-image -DskipTests \
-            -Dspring-boot.build-image.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/admin-service:${{ env.VERSION }}
-          cd ../
-          cd department-service
-          mvn spring-boot:build-image -DskipTests \
-            -Dspring-boot.build-image.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/department-service:${{ env.VERSION }}
-          cd ../
-          cd employee-service
-          mvn spring-boot:build-image -DskipTests \
-            -Dspring-boot.build-image.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/employee-service:${{ env.VERSION }} 
-          cd ../
-          cd organization-service
-          mvn spring-boot:build-image -DskipTests \
-            -Dspring-boot.build-image.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/organization-service:${{ env.VERSION }}
-          cd ../          
+        run: |        
           cd movie-service
           mvn spring-boot:build-image -DskipTests \
             -Dspring-boot.build-image.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/movie-service:${{ env.VERSION }}          
-          cd ../          
+          cd ../
+
+          cd erp-service
+          mvn spring-boot:build-image -DskipTests \
+            -Dspring-boot.build-image.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/erp-service:${{ env.VERSION }}          
+          cd ../    
+          
           cd gateway-service
           mvn spring-boot:build-image -DskipTests \
             -Dspring-boot.build-image.imageName=${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/gateway-service:${{ env.VERSION }}
@@ -61,29 +51,19 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish container image
         run:  |
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/admin-service:${{ env.VERSION }}
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/department-service:${{ env.VERSION }}
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/employee-service:${{ env.VERSION }}
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/organization-service:${{ env.VERSION }}
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/movie-service:${{ env.VERSION }}
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/erp-service:${{ env.VERSION }}          
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/gateway-service:${{ env.VERSION }}
       - name: Publish container image (latest)
-        run: |
-          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/admin-service:${{ env.VERSION }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/admin-service:latest
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/admin-service:latest
-          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/department-service:${{ env.VERSION }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/department-service:latest
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/department-service:latest
-          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/employee-service:${{ env.VERSION }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/employee-service:latest
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/employee-service:latest
-          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/organization-service:${{ env.VERSION }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/organization-service:latest
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/organization-service:latest
+        run: |     
           docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/movie-service:${{ env.VERSION }} \
             ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/movie-service:latest
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/movie-service:latest
+
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/erp-service:${{ env.VERSION }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/erp-service:latest
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/erp-service:latest     
+          
           docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/gateway-service:${{ env.VERSION }} \
             ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/gateway-service:latest
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/gateway-service:latest

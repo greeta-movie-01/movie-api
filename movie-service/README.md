@@ -1,6 +1,6 @@
 # springboot-react-keycloak
 
-The goal of this project is to secure `erp-app` using [`Keycloak`](https://www.keycloak.org/)(with PKCE). `erp-app` consists of two applications: one is a [Spring Boot](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) Rest API called `movies-api` and another is a [React](https://react.dev/) application called `movies-ui`.
+The goal of this project is to secure `movie-app` using [`Keycloak`](https://www.keycloak.org/)(with PKCE). `movie-app` consists of two applications: one is a [Spring Boot](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) Rest API called `movies-api` and another is a [React](https://react.dev/) application called `movies-ui`.
 
 ## Proof-of-Concepts & Articles
 
@@ -89,13 +89,13 @@ As `Keycloak` supports [`PKCE`](https://tools.ietf.org/html/rfc7636) (`Proof Key
     ./mvnw clean spring-boot:run -Dspring-boot.run.jvmArguments="-Dserver.port=9080"
     ```
 
-    Once the startup finishes, `KeycloakInitializerRunner.java` class will run and initialize `erp-realm` realm in `Keycloak`. Basically, it will create:
-    - Realm: `erp-realm`
-    - Client: `erp-app`
-    - Client Roles: `ERP_MANAGER` and `USER`
+    Once the startup finishes, `KeycloakInitializerRunner.java` class will run and initialize `movie-realm` realm in `Keycloak`. Basically, it will create:
+    - Realm: `movie-realm`
+    - Client: `movie-app`
+    - Client Roles: `MOVIE_MANAGER` and `MOVIE_USER`
     - Two users
-      - `admin`: with roles `ERP_MANAGER` and `USER`
-      - `user`: only with role `USER`
+      - `admin`: with roles `MOVIE_MANAGER` and `MOVIE_USER`
+      - `user`: only with role `MOVIE_USER`
 
   - We can also configure **Social Identity Providers** such as, `GitHub`, `Google`, `Facebook` and `Instagram`. I've written two articles in **Medium** where I explain step-by-step how to integrate [GitHub](https://medium.com/@ivangfr/integrating-github-as-a-social-identity-provider-in-keycloak-982f521a622f) and [Google](https://medium.com/@ivangfr/integrating-google-as-a-social-identity-provider-in-keycloak-c905577ec499).
 
@@ -142,12 +142,12 @@ You can manage movies by accessing directly `movies-api` endpoints using the Swa
 - Run the following commands to get the access token
   ```
   ACCESS_TOKEN="$(curl -s -X POST \
-    "http://localhost:8080/realms/erp-realm/protocol/openid-connect/token" \
+    "http://localhost:8080/realms/movie-realm/protocol/openid-connect/token" \
     -H "Content-Type: application/x-www-form-urlencoded" \
     -d "username=admin" \
     -d "password=admin" \
     -d "grant_type=password" \
-    -d "client_id=erp-app" | jq -r .access_token)"
+    -d "client_id=movie-app" | jq -r .access_token)"
 
   echo $ACCESS_TOKEN
   ```

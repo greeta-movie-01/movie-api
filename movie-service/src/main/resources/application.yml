@@ -4,13 +4,17 @@ spring:
   output:
     ansi:
       enabled: ALWAYS
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/moviesdb
+
   keycloak:
-    server-url: https://keycloak.greeta.net
+    server-url: http://localhost:8080
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${spring.keycloak.server-url}/realms/erp-realm
+          issuer-uri: ${spring.keycloak.server-url}/realms/movie-realm
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
 logging:
@@ -24,10 +28,13 @@ logging:
 info:
   system: Movie Service
 
+server:
+  forward-headers-strategy: framework
+
 jwt:
   auth:
     converter:
-      resource-id: erp-app
+      resource-id: movie-app
       principal-attribute: preferred_username
 
 management:
@@ -51,3 +58,9 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
+
+
+openapi:
+  oauthflow:
+    authServerUrl: http://localhost:8080
+    realm: movie-realm
