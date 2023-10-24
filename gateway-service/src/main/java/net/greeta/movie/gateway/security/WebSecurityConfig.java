@@ -36,7 +36,7 @@ public class WebSecurityConfig {
                         .pathMatchers(HttpMethod.GET,"/movie/v3/api-docs/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/movie", "/movie/**").permitAll()
                         .pathMatchers("/movie/*/comments").hasAnyRole(MOVIE_MANAGER, MOVIE_USER)
-                        .pathMatchers("/movie", "/movie/").hasRole(MOVIE_MANAGER)
+                        .pathMatchers("/movie", "/movie/**").hasRole(MOVIE_MANAGER)
                         .anyExchange().authenticated()
                         .and()
                          .csrf(csrf -> csrf.csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse()))
